@@ -1,0 +1,34 @@
+{%extends "base.html" %}
+
+{% block content %}
+  <h2>投稿一覧</h2>
+  <form action="" method="get">
+    <input name="query" value="{{ request.GET.query }}" type="text"><br>
+    <input name="name" value="{{ request.GET.name }}" type="text">
+    <button type="submit">検索する</button>
+  </form>
+  <table width="600" border="3">
+  <tr>
+    <th>タイトル</th>
+    <th>内容</th>
+    <th>投稿日時</th>
+    <th>投稿者</th> <!--テーブルヘッダー-->
+  </tr>
+  <!--table（表にする）-->
+    {% for post in object_list %}
+      <tr>
+      <td>{{post.title}}</td>
+      <td><a href="{%url 'post_app:post_detail' post.pk %}">{{ post.content |truncatechars:15}}</a></td>
+       <!--htmlではキー名を使ってアクセス-->
+       <!--post_detailにとぶリンクを張っている-->
+      <td>{{ post.created_at }}</td>
+      <td><a href="{% url 'accounts:user_profile' post.created_by.pk %}">{{ post.created_by }}</a></td>
+      <!--投稿者のところにプロフィール画面のリンクを張る、引数にpk-->
+      </tr> <!--table row(ここまでが一行)-->
+    {% endfor %} <!--ここまでがページの内容-->
+  </table>
+{% endblock %}
+<!--base_htmlに組み込まれる-->
+<!--bodyなどのタグはbase_htmlにあるので不要-->
+
+<!--created_byはモデルだがAbstractBaseUserのクラスの定義の中にstr()が入っているので文字列として出力される←「定義に移動」で確認-->

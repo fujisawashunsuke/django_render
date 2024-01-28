@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>ログインフォーム画面</title>
+</head>
+
+<body>
+    <h1>ログインフォーム画面</h1>
+    <form method="post">
+        {% csrf_token %} <!--postメソッドでサーバーに送信される-->
+        {{ login_form }}
+        <button type="submit">ログイン</button>
+    </form>
+    <p><a href="{%url 'accounts:user_registration' %}">新規登録はこちら</a></p>
+    <p><a href="{%url 'password_reset' %}">パスワードを忘れた</a></p>
+</body>
+
+</html>

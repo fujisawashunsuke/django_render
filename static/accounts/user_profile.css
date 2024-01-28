@@ -1,0 +1,34 @@
+* {
+    margin: 0;
+    padding: 0;
+    background-repeat: repeat-y;
+}
+#profile_page {
+    padding-left: 3%;
+}
+#user_status {
+    display: inline-block;
+}
+.followBtn {
+    display: inline-block;
+    border: 1.5px solid #ddd;
+    padding: 2px 8px;
+    font-size: 16.5px;
+}
+#user_post {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 70px;
+}
+.list-t {
+    font-size: 1.9rem;
+    font-weight: 700;
+}
+.user-icon {
+    height: 80px;
+    width: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1.5px solid #eee;
+}
+/*CSSは長いので分ける*/

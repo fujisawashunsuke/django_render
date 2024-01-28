@@ -1,0 +1,60 @@
+
+
+{% extends "base.html" %}
+{% load static %}
+{% block link %}
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/user_profile.css' %}">
+{% endblock %} <!--user_profile.cssで使うcssを定義しておかないと参照できない-->
+<!--base.htmlのblocklinkからそれぞれのページに飛ぶ-->
+<!--全体で必要なcssはbase.htmlで定義-->
+{% block content %}
+<div id="profile_page">
+    <div id="user_status">
+    {% if User.icon%}
+    <img src="{{ User.icon.url}}" class="user-icon"> <!--スタイル…・・cssで定義-->
+    {% else %}
+    <img src="{% static 'images/user_icon.png' %}" class="user-icon">
+    {% endif %}
+        <h2>{{ user.username }}</h2> <!--インスタンスからvalueの部分の情報を取得できる-->
+        <p>{{user.introduction}}</p>
+        <p>フォロー中の人数:{{object.followers.count}}</p>
+        <p>フォローされている人数:{{object.followees.count}}</p>
+        <!--objectとすると関連付けられたモデルがとれる-->
+        {% if object.pk != request.user.pk %}
+            {% if object in request.user.followers.all %}
+                <a href={% url 'accounts:profile_follow' object.pk %} class="btn btn--blue btn--radius">フォロー解除</a>
+            {% else %}
+                <a href={% url 'accounts:profile_follow' object.pk %} class="btn btn--blue btn--radius">フォローする</a>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div id="user_post">
+        <p class="list-t">{{ user.username }}さんの投稿一覧</p>
+        <table width="650" border="3">
+        <tr>
+            <th>タイトル</th>
+            <th>内容</th>
+            <th>投稿日時</th> <!--テーブルヘッダー-->
+            <th>編集</th>
+            <th>削除</th>
+        </tr>
+        {% for p in object.postapp_set.all %} <!--自分のすべての投稿をとってくる-->
+        <tr>
+            <td>{{p.title}}</td>
+            <td>{{p.content}}</td>
+            <td>{{p.created_at}}</td>
+            {% if object.pk == request.user.pk %} <!--表示しているユーザー＝ログインしているユーザー-->
+            <td><button onclick="location.href='{% url 'post_app:post_update' p.pk %}'">編集</button></td>
+            <td><button onclick="location.href='{% url 'post_app:post_delete' p.pk %}'">削除</button></td>
+            {% endif %}
+               <!--a hrefなら文字に、location.hrefならボタンにリンクが張られる-->
+        </tr>
+        {% empty %}
+            <p>まだ投稿はありません。</p>
+        {% endfor %}
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}

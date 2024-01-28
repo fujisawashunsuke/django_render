@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{%load static%}
+
+{% block link %}
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/user_profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div id="profile_page">
+    <div id="user_status">
+        {% if user.icon %}
+            <img src="{{ user.icon.url }}" class="user-icon">
+        {% else %}
+            <img src="{% static 'images/user_icon.png' %}" class="user-icon">
+        {% endif %}
+        <h2>{{ user.username }}</h2>
+    </div>
+    <div id="user_post">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %} <!--セキュリティ的にformの前に書いておく-->
+            {{ form.as_p }} <!--formをpタグのついたhtml用の形式に変更してくれる-->
+            <button type="submit">更新する</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

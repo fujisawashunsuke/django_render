@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{%load static%}
+
+{%block content%}
+    <h2>投稿編集</h2>
+    <form enctype="multipart/form-data" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }} <!--views.pyで指定されたPostAppCreateFormを使う(最初に作るときと同じ)、各文にｐタグをつけてHTML形式に-->
+        <button type="submit">更新</button>
+        <input type="button" value="キャンセル" onClick="javascript:history.go(-1);"> <!--途中で編集をやめる場合履歴のひとつ前に戻る-->
+    </form>
+{%endblock%}

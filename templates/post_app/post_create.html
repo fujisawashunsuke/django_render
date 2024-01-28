@@ -1,0 +1,12 @@
+{%extends "base.html" %} <!--メニューを上に表示-->
+
+{% block content %}
+<form enctype="multipart/form-data" method="POST">
+  <!--バイナリデータにはenctypeで指定が必要-->
+  <!--multipartなのでテキストも含む-->
+  {% csrf_token %} <!--入力フォームからの攻撃を防ぐ-->
+  {{ form.as_p}} <!--各行に<p></p>を付ける-->
+  <!--djangoの形式だが、HTMLに変換される-->
+  <button type="submit">送信</button>
+</form>
+{% endblock %}

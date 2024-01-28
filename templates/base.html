@@ -1,0 +1,61 @@
+{% load static%}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Django SNS</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"> <!--読み込みの宣言-->
+    <!--bootstrapにたくさんのcssが置いてある-->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="icon" tyoe="image/png" href="{%static 'images/favicon.png'%}">
+    <!--relはhrefで示しているのがアイコンだという関係性を示している-->
+
+    {% block link%}
+    {% endblock %}
+</head>
+<body>
+{% if messages %}
+<ul class="messages_ul">
+  {% for message in messages %}
+    <li class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</li>
+    <!--タグがある場合alert_なんとかのところにタグ名を入れる-->
+  {% endfor %}
+</ul>
+{% endif %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+  <div class="navbar-header">
+  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#gnavi">
+    <span class="sr-only">メニュー</span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+  </button>
+  <a href="#" class="navbar-brand">DjangoSNS</a>
+</div>
+
+<div id="gnavi" class="collapse navbar-collapse">
+  <ul class="nav navbar-nav navbar-right">
+    {% if user.is_authenticated %}
+      <li><a href="{% url 'post_app:post_list' %}">投稿一覧</a></li>
+      <li><a href="{% url 'post_app:post_create' %}">投稿する</a></li>
+      <li><a href="{% url 'accounts:user_profile' request.user.pk %}">プロフィール</a></li>
+      <li><a href="{% url 'accounts:profile_update' request.user.pk %}">ユーザー情報変更</a></li>
+      <!--urls.pyの<int:pk>ではめ込む値をrequest.user.pkで指定している-->
+      <li><a href="{% url 'accounts:logout'%}">ログアウト</a></li>
+    {% else%}
+      <li><a href="{%url 'accounts:login' %}">ログイン</a></li>
+          <!--urlpatternsで登録したやつ-->
+    {% endif %}
+  </ul>
+</div>
+</nav>
+</body>
+</html>
+
+{% block content %}
+<!-- 各ページの内容がここに入る-->
+<!-- ここにページ毎のコンテンツを記述 -->
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{%block content%}
+    <h2>投稿詳細表示</h2>
+    <div>
+        <strong>タイトル</strong>
+        {{ object.title }}
+    </div>
+    <div>
+        <strong>内容</strong>
+        {{ object.content }}
+    </div>
+    <div class="image">
+        {% if object.image1 %} <!--設定されていたら-->
+            <img src="{{object.image1.url}}" style="width:300px;height:auto">
+        {% endif %}
+        {% if object.image2 %} <!--設定されていたら-->
+            <img src="{{object.image2.url}}" style="width:300px;height:auto">
+        {% endif %}
+        {% if object.image3 %} <!--設定されていたら-->
+            <img src="{{object.image3.url}}" style="width:300px;height:auto">
+        {% endif %}
+        {% if object.address %}
+        <!--postlist-views.pyのpostdetailviewでpostdetail.htmlとpostappが関連付けられているからobject.でとってこれる-->
+            <iframe id='map'
+                src='https://www.google.com/maps/embed/v1/place?key=AIzaSyB5nJdSd9c-sdl8QBmGTwt-z8WanKMu2jE&amp;q={{object.address}}'
+                width='400'
+                height='400'
+                frameborder='0'>
+                <!--全部irameのパラメータ-->
+                <!--formで入力されたaddressが入ってくる-->
+                <!--直接urlにのせてサーバーに送る(POSTではなくGET)-->
+            </iframe>
+        {% endif %}
+    </div>
+    <div>
+        <strong>投稿日</strong>
+        {{ object.created_at }}
+    </div>
+    <div>
+        <strong>投稿者</strong>
+        {{ object.created_by }}
+    </div>
+    <div>
+        <a href={% url 'post_app:post_list' %}>投稿一覧</a>
+    </div>
+{%endblock%}
