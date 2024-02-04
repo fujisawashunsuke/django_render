@@ -11,10 +11,16 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+import environ
+from decouple import config
+from dj_database_url import parse as dburl
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent #setting.pyのパスをとる
 
+env=environ.Env()
+env.read_env(os.path.join(BASE_DIR,".env")) #区切り文字を分けるのがめんどいのでjoinでつなげる
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -43,6 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -72,15 +79,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysns.wsgi.application'
 
-
+default_dburl="sqlite:///" + str(os.path.join(BASE_DIR,"db.splite3"))
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': config("DATABASE_URL",default=default_dburl,cast=dburl)
+    #DATABASE_URLがあればそれを使う、なければdefault_dburl
+    # {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+        
+    # }
 }
 
 
@@ -120,6 +130,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT=str(os.path.join(BASE_DIR,"staticfiles"))
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+]
+
 MEDIA_URL='/media/'
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 STATICFILES_DIRS=[os.path.join(BASE_DIR,'static'),]
@@ -137,3 +151,8 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = '' #送信元のアドレス(本来はdjango.comみたいな)
 EMAIL_HOST_PASSWORD = '' #セキュリティ上パスワードを打ってそのまま送信されるのはよくない
 EMAIL_USE_TLS = True
+
+SUPERUSER_NAME = env("SUPERUSER_NAME")
+SUPERUSER_EMAIL = env("SUPERUSER_EMAIL")
+SUPERUSER_PASSWORD = env("SUPERUSER_PASSWORD")
+#.envで定義しているadminをとれる
